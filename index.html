@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тестирование · Программное обеспечение и искусственный интеллект · 5 класс</title>
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Segoe UI", "Trebuchet MS", Tahoma, Verdana, sans-serif;
+    font-size: 18px;
+    line-height: 1.5;
+    color: #1b2a3a;
+    background: linear-gradient(160deg, #e9f2ff 0%, #f8fcff 45%, #edfaf1 100%);
+    background-attachment: fixed;
+    padding: 20px 16px 60px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 980px; margin: 0 auto; }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fade .35s ease; }
+
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid #e3edf8;
+    border-radius: 20px;
+    box-shadow: 0 12px 34px rgba(28, 63, 116, .12);
+    padding: 30px 34px;
+  }
+
+  /* ---------- СТАРТОВЫЙ ЭКРАН ---------- */
+  .brand {
+    display: inline-block;
+    background: #e8f1ff;
+    color: #2b6cb0;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+
+  h1.title {
+    font-size: 34px;
+    line-height: 1.25;
+    margin: 0 0 10px;
+    color: #14315c;
+  }
+
+  .subtitle { font-size: 20px; color: #3d5a80; margin: 0 0 6px; font-weight: 600; }
+  .meta { font-size: 16px; color: #7b8fa6; margin: 0 0 26px; }
+
+  .divider {
+    height: 2px;
+    background: linear-gradient(90deg, #2ecc71, #3d8bfd, transparent);
+    border-radius: 2px;
+    margin: 0 0 26px;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    color: #14315c;
+    margin-bottom: 10px;
+  }
+
+  #nameInput {
+    width: 100%;
+    border: 3px solid #2ecc71;
+    background-color: #f0fff4;
+    padding: 12px;
+    font-size: 20px;
+    border-radius: 8px;
+    font-family: inherit;
+    color: #14315c;
+    font-weight: 600;
+    outline: none;
+    transition: box-shadow .2s;
+  }
+  #nameInput:focus { box-shadow: 0 0 0 5px rgba(46, 204, 113, .25); }
+
+  .hint { font-size: 15px; color: #7b8fa6; margin: 10px 0 0; }
+
+  .btn {
+    font-family: inherit;
+    font-size: 21px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 30px;
+    cursor: pointer;
+    transition: transform .12s, box-shadow .2s, background .2s;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #3d8bfd, #2b6cb0);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(43, 108, 176, .35);
+  }
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(43, 108, 176, .45);
+  }
+  .btn-primary:disabled {
+    background: #c9d5e3;
+    color: #f2f6fa;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  #startBtn { width: 100%; margin-top: 24px; font-size: 23px; padding: 18px; }
+
+  /* ---------- ЭКРАН ВОПРОСА ---------- */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .stage-label {
+    font-weight: 700;
+    color: #2b6cb0;
+    background: #e8f1ff;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 16px;
+  }
+
+  .counter { font-size: 17px; color: #64798f; font-weight: 700; }
+
+  .progress {
+    height: 12px;
+    background: #e7eef8;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 26px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #2ecc71, #3d8bfd);
+    border-radius: 999px;
+    transition: width .35s ease;
+  }
+
+  .question-text {
+    font-size: 25px;
+    line-height: 1.4;
+    color: #14315c;
+    margin: 0 0 24px;
+    font-weight: 700;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 12px; }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: 19px;
+    font-weight: 500;
+    color: #1b2a3a;
+    background: #fff;
+    border: 2px solid #d9e5f2;
+    border-radius: 14px;
+    padding: 15px 18px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .option:hover { border-color: #8bb8f0; background: #f6faff; }
+  .option.selected {
+    border-color: #3d8bfd;
+    background: #eaf3ff;
+    box-shadow: 0 0 0 3px rgba(61, 139, 253, .18);
+  }
+
+  .bullet {
+    flex: 0 0 auto;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    background: #eef4fc;
+    color: #2b6cb0;
+    font-weight: 800;
+    font-size: 17px;
+    transition: all .15s;
+  }
+  .option.selected .bullet { background: #3d8bfd; color: #fff; }
+
+  .tf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .tf-option {
+    justify-content: center;
+    font-size: 23px;
+    font-weight: 800;
+    padding: 26px 18px;
+    gap: 10px;
+  }
+  .tf-icon { font-size: 26px; }
+
+  .tf-option[data-v="true"].selected {
+    border-color: #2ecc71;
+    background: #f0fff4;
+    color: #1d7a45;
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, .22);
+  }
+  .tf-option[data-v="false"].selected {
+    border-color: #e74c3c;
+    background: #fff5f4;
+    color: #b93b2c;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, .2);
+  }
+
+  /* ---------- СООТВЕТСТВИЯ ---------- */
+  .match { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .match-col { display: flex; flex-direction: column; gap: 10px; }
+
+  .match-head {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #7b8fa6;
+    margin-bottom: 2px;
+  }
+
+  .match-item {
+    position: relative;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: left;
+    padding: 14px 48px 14px 16px;
+    border: 2px solid #d9e5f2;
+    border-radius: 12px;
+    background: #fff;
+    cursor: pointer;
+    transition: all .15s;
+    color: #1b2a3a;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+  }
+  .match-item:hover { border-color: #8bb8f0; background: #f6faff; }
+
+  .match-item.active-left {
+    border-color: #f39c12;
+    background: #fff8e8;
+    box-shadow: 0 0 0 3px rgba(243, 156, 18, .28);
+  }
+
+  .mi-badge {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; color: #fff;
+    background: transparent;
+    transition: background .15s;
+  }
+
+  .nav-row { margin-top: 28px; display: flex; justify-content: flex-end; }
+  #nextBtn { min-width: 250px; }
+
+  /* ---------- ПЕРЕХОДНЫЙ ЭКРАН ---------- */
+  .center-card { text-align: center; padding: 46px 34px; }
+  .big-emoji { font-size: 68px; line-height: 1; margin-bottom: 12px; }
+  .center-card h2 { font-size: 30px; color: #14315c; margin: 0 0 14px; }
+  .center-card p { font-size: 19px; color: #3d5a80; margin: 0 0 12px; }
+  .center-card .btn { margin-top: 18px; }
+
+  /* ---------- РЕЗУЛЬТАТ ---------- */
+  .result-card { padding: 30px 34px 34px; }
+
+  .result-name-box {
+    border: 3px solid #7c5cff;
+    background: #f6f2ff;
+    border-radius: 16px;
+    padding: 16px 22px;
+    text-align: center;
+  }
+  .rn-label {
+    font-size: 14px;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: #7c5cff;
+    font-weight: 800;
+  }
+  .rn-name {
+    font-size: 36px;
+    font-weight: 800;
+    color: #5a34d6;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  .score-box {
+    margin: 20px 0;
+    border-radius: 18px;
+    padding: 20px 18px;
+    text-align: center;
+    background: linear-gradient(135deg, #ffe082, #f7b731);
+    box-shadow: 0 12px 28px rgba(247, 183, 49, .45);
+    border: 3px solid #ffd35c;
+  }
+  .score-line {
+    font-size: 50px;
+    font-weight: 900;
+    color: #5a3b00;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+  }
+  .score-line .score-num { color: #b3541e; }
+
+  .warning-box {
+    background: #fff2f2;
+    border: 3px dashed #e74c3c;
+    color: #c0392b;
+    font-size: 22px;
+    font-weight: 800;
+    border-radius: 14px;
+    padding: 16px 20px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .bd-item {
+    background: #f4f9ff;
+    border: 2px solid #dce9f8;
+    border-radius: 14px;
+    padding: 14px 18px;
+  }
+  .bd-item span {
+    display: block;
+    color: #64798f;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 4px;
+  }
+  .bd-item b { font-size: 19px; color: #14315c; }
+
+  h3.section-title {
+    font-size: 22px;
+    color: #14315c;
+    margin: 0 0 14px;
+  }
+
+  .desc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 28px;
+    font-size: 17px;
+  }
+  .desc-table th {
+    background: #eef4fc;
+    color: #2b6cb0;
+    text-align: left;
+    padding: 12px 14px;
+    border: 2px solid #dce9f8;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .desc-table td {
+    border: 2px solid #dce9f8;
+    padding: 12px 14px;
+    vertical-align: top;
+  }
+  .desc-table td:first-child {
+    width: 150px;
+    font-weight: 800;
+    color: #2b6cb0;
+    white-space: nowrap;
+  }
+  .desc-table tr.active td {
+    background: #f0fff4;
+    border-color: #2ecc71;
+    font-weight: 700;
+    color: #1d7a45;
+  }
+  .desc-table tr.active td:first-child { color: #158a4b; }
+
+  .restart-row { text-align: center; }
+
+  @media (max-width: 900px) {
+    body { font-size: 17px; }
+    .card { padding: 22px 20px; }
+    h1.title { font-size: 27px; }
+    .question-text { font-size: 21px; }
+    .score-line { font-size: 36px; }
+    .rn-name { font-size: 28px; }
+    .warning-box { font-size: 18px; }
+    .breakdown { grid-template-columns: 1fr; }
+    .match { grid-template-columns: 1fr; }
+    .tf-row { grid-template-columns: 1fr; }
+    #nextBtn { min-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ЭКРАН 1: АВТОРИЗАЦИЯ -->
+  <section id="screen-start" class="screen active">
+    <div class="card">
+      <div class="brand">Информатика · 5 класс</div>
+      <h1 class="title">Тестирование знаний:<br>«Программное обеспечение и искусственный интеллект»</h1>
+      <p class="subtitle">1 четверть · Урок 7</p>
+      <p class="meta">30 вопросов · 2 этапа · максимум 10 баллов</p>
+      <div class="divider"></div>
+
+      <label class="field-label" for="nameInput">Введи своё имя и фамилию:</label>
+      <input id="nameInput" type="text" autocomplete="off" spellcheck="false">
+      <p class="hint">Без имени начать проверку знаний нельзя.</p>
+
+      <button id="startBtn" class="btn btn-primary" disabled>Начать проверку знаний</button>
+    </div>
+  </section>
+
+  <!-- ЭКРАН 2: ВОПРОС -->
+  <section id="screen-quiz" class="screen">
+    <div class="card">
+      <div class="topbar">
+        <span id="stageLabel" class="stage-label"></span>
+        <span id="counter" class="counter"></span>
+      </div>
+      <div class="progress"><div id="progressFill" class="progress-fill"></div></div>
+      <h2 id="questionText" class="question-text"></h2>
+      <div id="answerArea" class="answer-area"></div>
+      <div class="nav-row">
+        <button id="nextBtn" class="btn btn-primary" disabled>Далее →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ЭКРАН 3: ПЕРЕХОД К ЭТАПУ 2 -->
+  <section id="screen-transition" class="screen">
+    <div class="card center-card">
+      <div class="big-emoji">✅</div>
+      <h2>Этап 1 «Базовый» завершён!</h2>
+      <p>Ты ответил на все 22 базовых вопроса.</p>
+      <p>Сейчас начнётся <b>Этап 2 «Продвинутый»</b> — 8 вопросов посложнее.<br>
+         Именно они помогают получить <b>9 и 10 баллов</b>. Отвечай внимательно!</p>
+      <button id="toStage2Btn" class="btn btn-primary">Перейти к этапу 2 →</button>
+    </div>
+  </section>
+
+  <!-- ЭКРАН 4: РЕЗУЛЬТАТ -->
+  <section id="screen-result" class="screen"></section>
+
+</div>
+
+<script>
+/* =========================================================
+   ДАННЫЕ: ЭТАП 1 — «БАЗОВЫЙ» (22 вопроса, максимум 8 баллов)
+   ========================================================= */
+const STAGE1 = [
+  {
+    type: 'single',
+    q: 'Что такое ПО (программное обеспечение)?',
+    options: [
+      'Все программы, которые установлены на компьютере',
+      'Части компьютера: мышь, клавиатура, монитор',
+      'Только компьютерные игры'
+    ],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'Какая программа нужна, чтобы нарисовать рисунок на компьютере?',
+    options: ['Paint (Пейнт)', 'Калькулятор', 'Антивирус', 'Проводник'],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'Операционная система — это…',
+    options: [
+      'Главная программа, которая управляет работой компьютера',
+      'Программа для рисования картинок',
+      'Программа для просмотра мультфильмов'
+    ],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'Какая из этих программ является операционной системой?',
+    options: ['Windows (Виндовс)', 'Paint (Пейнт)', 'Калькулятор'],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'Голосовой помощник «Алиса» — это пример…',
+    options: ['Искусственного интеллекта', 'Антивируса', 'Операционной системы'],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'Для чего нужен браузер?',
+    options: [
+      'Чтобы искать информацию в интернете',
+      'Чтобы рисовать картинки',
+      'Чтобы печатать текст'
+    ],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'Что из перечисленного — устройство, а не программа?',
+    options: ['Компьютерная мышь', 'Paint (Пейнт)', 'Windows (Виндовс)', 'Калькулятор'],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'Что нужно нажать, чтобы закрыть окно программы?',
+    options: [
+      'Крестик в правом верхнем углу окна',
+      'Кнопку «Пуск»',
+      'Пробел на клавиатуре'
+    ],
+    correct: 0
+  },
+  { type: 'tf', q: 'Антивирус защищает компьютер от вирусов.', correct: true },
+  { type: 'tf', q: 'Программное обеспечение можно потрогать руками.', correct: false },
+  { type: 'tf', q: 'Без программ компьютер не сможет выполнять никакие задачи.', correct: true },
+  { type: 'tf', q: 'Робот-пылесос использует элементы искусственного интеллекта.', correct: true },
+  { type: 'tf', q: 'Все программы умеют учиться и думать, как человек.', correct: false },
+  { type: 'tf', q: 'Paint (Пейнт) — это прикладная программа.', correct: true },
+  {
+    type: 'single',
+    q: 'Что такое ИИ (искусственный интеллект)?',
+    options: [
+      'Технология, которая позволяет компьютеру учиться и решать задачи, как человек',
+      'Железный робот, похожий на человека',
+      'Очень быстрый интернет'
+    ],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'Что делать, если на экране появилось странное сообщение о вирусе?',
+    options: [
+      'Позвать учителя и не нажимать на непонятные кнопки',
+      'Нажать на все кнопки подряд',
+      'Выключить компьютер из розетки и убежать'
+    ],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'Какая программа поможет быстро посчитать примеры?',
+    options: ['Калькулятор', 'Paint (Пейнт)', 'Браузер'],
+    correct: 0
+  },
+  { type: 'tf', q: 'Компьютерные игры — это программное обеспечение.', correct: true },
+  {
+    type: 'match',
+    q: 'Соедини программу и то, для чего она нужна:',
+    pairs: [
+      { left: 'Paint (Пейнт)', right: 'рисование картинок' },
+      { left: 'Калькулятор', right: 'вычисления' },
+      { left: 'Антивирус', right: 'защита от вирусов' }
+    ]
+  },
+  {
+    type: 'match',
+    q: 'Соедини название и его значение:',
+    pairs: [
+      { left: 'Windows (Виндовс)', right: 'операционная система' },
+      { left: 'Алиса', right: 'голосовой помощник' },
+      { left: 'Браузер', right: 'поиск информации в интернете' }
+    ]
+  },
+  {
+    type: 'single',
+    q: 'Что произойдёт, если удалить с компьютера все программы?',
+    options: [
+      'Компьютер не сможет выполнять задачи — останется просто набор деталей',
+      'Компьютер станет работать быстрее',
+      'Ничего не изменится'
+    ],
+    correct: 0
+  },
+  { type: 'tf', q: 'Компьютерная мышь — это программное обеспечение.', correct: false }
+];
+
+/* =========================================================
+   ДАННЫЕ: ЭТАП 2 — «ПРОДВИНУТЫЙ» (8 вопросов, до 2 баллов)
+   ========================================================= */
+const STAGE2 = [
+  {
+    type: 'single',
+    q: 'На какие три большие группы делят всё программное обеспечение?',
+    options: [
+      'Системное, прикладное, инструментальное',
+      'Быстрое, среднее, медленное',
+      'Игровое, учебное, рабочее'
+    ],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'К какой группе ПО (программного обеспечения) относится операционная система Windows (Виндовс)?',
+    options: [
+      'Системное ПО (программное обеспечение)',
+      'Прикладное ПО (программное обеспечение)',
+      'Инструментальное ПО (программное обеспечение)'
+    ],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'Paint (Пейнт), Word (Ворд), Калькулятор — это…',
+    options: ['Прикладные программы', 'Системные программы', 'Инструментальные программы'],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'Программы, с помощью которых создают другие программы (среды программирования), — это…',
+    options: [
+      'Инструментальное ПО (программное обеспечение)',
+      'Прикладное ПО (программное обеспечение)',
+      'Системное ПО (программное обеспечение)'
+    ],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'Чем программа с искусственным интеллектом отличается от обычной программы?',
+    options: [
+      'Она может обучаться на примерах и принимать решения',
+      'Она всегда занимает больше места на диске',
+      'Она работает только в интернете'
+    ],
+    correct: 0
+  },
+  {
+    type: 'single',
+    q: 'Телефон сам узнаёт лицо хозяина и разблокируется. Это пример…',
+    options: [
+      'Работы искусственного интеллекта',
+      'Работы антивируса',
+      'Работы операционной системы'
+    ],
+    correct: 0
+  },
+  {
+    type: 'match',
+    q: 'Соедини вид ПО (программного обеспечения) и его пример:',
+    pairs: [
+      { left: 'Системное ПО (программное обеспечение)', right: 'Windows (Виндовс)' },
+      { left: 'Прикладное ПО (программное обеспечение)', right: 'Paint (Пейнт)' },
+      { left: 'Инструментальное ПО (программное обеспечение)', right: 'среда программирования' }
+    ]
+  },
+  { type: 'tf', q: 'Искусственный интеллект иногда может ошибаться.', correct: true }
+];
+
+/* =========================================================
+   СОСТОЯНИЕ И УТИЛИТЫ
+   ========================================================= */
+const state = {
+  name: '',
+  stage: 1,
+  index: 0,
+  answers: { 1: [], 2: [] },
+  correct1: 0,
+  correct2: 0
+};
+
+const MATCH_COLORS = [
+  { c: '#e74c3c', bg: '#fdecea' },
+  { c: '#3182ce', bg: '#e8f1fb' },
+  { c: '#8e44ad', bg: '#f5ecfa' },
+  { c: '#16a085', bg: '#e6f7f3' }
+];
+
+let matchPairs = {};
+let matchSelLeft = null;
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+/* Перемешивание вариантов ответа (кэшируется на объекте вопроса) */
+function prepareSingle(q) {
+  if (!q._shuffled) {
+    const idx = q.options.map((_, i) => i);
+    shuffle(idx);
+    q._shuffled = idx.map(i => q.options[i]);
+    q._correctIdx = idx.indexOf(q.correct);
+  }
+  return { options: q._shuffled, correct: q._correctIdx };
+}
+
+/* Перемешивание правой колонки в заданиях на соответствие */
+function prepareMatch(q) {
+  if (!q._right) {
+    const rights = q.pairs.map(p => p.right);
+    q._right = shuffle(rights.slice());
+    q._correct = {};
+    q.pairs.forEach((p, i) => {
+      q._correct[i] = q._right.indexOf(p.right);
+    });
+  }
+  return { right: q._right, correct: q._correct };
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* =========================================================
+   СТАРТОВЫЙ ЭКРАН
+   ========================================================= */
+const nameInput = document.getElementById('nameInput');
+const startBtn = document.getElementById('startBtn');
+
+function refreshStartBtn() {
+  startBtn.disabled = nameInput.value.trim().length === 0;
+}
+
+nameInput.addEventListener('input', refreshStartBtn);
+
+nameInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !startBtn.disabled) startBtn.click();
+});
+
+startBtn.addEventListener('click', () => {
+  const n = nameInput.value.trim();
+  if (!n) return;
+  state.name = n;
+  state.stage = 1;
+  state.index = 0;
+  state.answers = { 1: [], 2: [] };
+  state.correct1 = 0;
+  state.correct2 = 0;
+  showScreen('screen-quiz');
+  renderQuestion();
+});
+
+/* =========================================================
+   РЕНДЕР ВОПРОСА
+   ========================================================= */
+function renderQuestion() {
+  const list = state.stage === 1 ? STAGE1 : STAGE2;
+  const q = list[state.index];
+  const total = list.length;
+
+  document.getElementById('stageLabel').textContent =
+    state.stage === 1 ? 'Этап 1 · «Базовый»' : 'Этап 2 · «Продвинутый»';
+  document.getElementById('counter').textContent =
+    'Вопрос ' + (state.index + 1) + ' из ' + total + '  ·  всего №' +
+    (state.stage === 1 ? state.index + 1 : 22 + state.index + 1);
+  document.getElementById('progressFill').style.width =
+    (((state.index + 1) / total) * 100) + '%';
+
+  document.getElementById('questionText').textContent = q.q;
+
+  const area = document.getElementById('answerArea');
+  area.innerHTML = '';
+
+  if (q.type === 'single') {
+    renderSingle(q, area);
+  } else if (q.type === 'tf') {
+    renderTF(q, area);
+  } else if (q.type === 'match') {
+    renderMatch(q, area);
+  }
+
+  const nextBtn = document.getElementById('nextBtn');
+  if (state.stage === 1 && state.index === STAGE1.length - 1) {
+    nextBtn.textContent = 'Завершить этап 1 →';
+  } else if (state.stage === 2 && state.index === STAGE2.length - 1) {
+    nextBtn.textContent = 'Показать результат 🎉';
+  } else {
+    nextBtn.textContent = 'Далее →';
+  }
+
+  updateNext();
+}
+
+function renderSingle(q, area) {
+  const prep = prepareSingle(q);
+  const saved = state.answers[state.stage][state.index];
+
+  prep.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'option' + (saved === i ? ' selected' : '');
+
+    const bullet = document.createElement('span');
+    bullet.className = 'bullet';
+    bullet.textContent = 'АБВГ'[i] || '•';
+
+    const txt = document.createElement('span');
+    txt.className = 'opt-text';
+    txt.textContent = opt;
+
+    btn.appendChild(bullet);
+    btn.appendChild(txt);
+
+    btn.addEventListener('click', () => {
+      state.answers[state.stage][state.index] = i;
+      area.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      updateNext();
+    });
+
+    area.appendChild(btn);
+  });
+}
+
+function renderTF(q, area) {
+  const saved = state.answers[state.stage][state.index];
+  const row = document.createElement('div');
+  row.className = 'tf-row';
+
+  [true, false].forEach(v => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'option tf-option' + (saved === v ? ' selected' : '');
+    btn.dataset.v = String(v);
+
+    const icon = document.createElement('span');
+    icon.className = 'tf-icon';
+    icon.textContent = v ? '✔' : '✘';
+
+    const txt = document.createElement('span');
+    txt.textContent = v ? 'Верно' : 'Неверно';
+
+    btn.appendChild(icon);
+    btn.appendChild(txt);
+
+    btn.addEventListener('click', () => {
+      state.answers[state.stage][state.index] = v;
+      row.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      updateNext();
+    });
+
+    row.appendChild(btn);
+  });
+
+  area.appendChild(row);
+}
+
+function renderMatch(q, area) {
+  prepareMatch(q);
+
+  const saved = state.answers[state.stage][state.index];
+  matchPairs = saved ? Object.assign({}, saved) : {};
+  matchSelLeft = null;
+
+  const grid = document.createElement('div');
+  grid.className = 'match';
+
+  const leftCol = document.createElement('div');
+  leftCol.className = 'match-col';
+  const lHead = document.createElement('div');
+  lHead.className = 'match-head';
+  lHead.textContent = 'Понятие';
+  leftCol.appendChild(lHead);
+
+  q.pairs.forEach((p, i) => {
+    leftCol.appendChild(makeMatchItem('left', i, p.left));
+  });
+
+  const rightCol = document.createElement('div');
+  rightCol.className = 'match-col';
+  const rHead = document.createElement('div');
+  rHead.className = 'match-head';
+  rHead.textContent = 'Значение';
+  rightCol.appendChild(rHead);
+
+  q._right.forEach((r, j) => {
+    rightCol.appendChild(makeMatchItem('right', j, r));
+  });
+
+  grid.appendChild(leftCol);
+  grid.appendChild(rightCol);
+  area.appendChild(grid);
+
+  paintMatch();
+}
+
+function makeMatchItem(side, i, text) {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'match-item';
+  btn.dataset.side = side;
+  btn.dataset.i = i;
+
+  const span = document.createElement('span');
+  span.className = 'mi-text';
+  span.textContent = text;
+
+  const badge = document.createElement('span');
+  badge.className = 'mi-badge';
+
+  btn.appendChild(span);
+  btn.appendChild(badge);
+
+  btn.addEventListener('click', () => {
+    if (side === 'left') onLeftClick(i);
+    else onRightClick(i);
+  });
+
+  return btn;
+}
+
+function onLeftClick(i) {
+  if (matchPairs[i] !== undefined) {
+    delete matchPairs[i];
+    matchSelLeft = null;
+    saveMatch();
+    paintMatch();
+    return;
+  }
+  matchSelLeft = (matchSelLeft === i) ? null : i;
+  paintMatch();
+}
+
+function onRightClick(j) {
+  const ownerKey = Object.keys(matchPairs).find(k => matchPairs[k] === j);
+  if (ownerKey !== undefined) {
+    delete matchPairs[ownerKey];
+    saveMatch();
+    paintMatch();
+    return;
+  }
+  if (matchSelLeft === null) return;
+  matchPairs[matchSelLeft] = j;
+  matchSelLeft = null;
+  saveMatch();
+  paintMatch();
+}
+
+function saveMatch() {
+  state.answers[state.stage][state.index] = Object.assign({}, matchPairs);
+  updateNext();
+}
+
+function paintMatch() {
+  const area = document.getElementById('answerArea');
+  if (!area) return;
+
+  const items = area.querySelectorAll('.match-item');
+  items.forEach(el => {
+    el.classList.remove('paired', 'active-left');
+    el.style.borderColor = '';
+    el.style.backgroundColor = '';
+    el.style.color = '';
+    const b = el.querySelector('.mi-badge');
+    if (b) { b.textContent = ''; b.style.background = 'transparent'; }
+  });
+
+  const leftKeys = Object.keys(matchPairs).map(Number).sort((a, b) => a - b);
+  leftKeys.forEach((li, order) => {
+    const col = MATCH_COLORS[order % MATCH_COLORS.length];
+    const ri = matchPairs[li];
+    const lEl = area.querySelector('.match-item[data-side="left"][data-i="' + li + '"]');
+    const rEl = area.querySelector('.match-item[data-side="right"][data-i="' + ri + '"]');
+
+    [lEl, rEl].forEach(el => {
+      if (!el) return;
+      el.classList.add('paired');
+      el.style.borderColor = col.c;
+      el.style.backgroundColor = col.bg;
+      const b = el.querySelector('.mi-badge');
+      if (b) {
+        b.textContent = String(order + 1);
+        b.style.background = col.c;
+      }
+    });
+  });
+
+  if (matchSelLeft !== null) {
+    const el = area.querySelector('.match-item[data-side="left"][data-i="' + matchSelLeft + '"]');
+    if (el) el.classList.add('active-left');
+  }
+}
+
+/* =========================================================
+   ПРОВЕРКА ОТВЕТОВ
+   ========================================================= */
+function checkAnswer(q, a) {
+  if (a === undefined || a === null) return false;
+
+  if (q.type === 'single') {
+    prepareSingle(q);
+    return a === q._correctIdx;
+  }
+
+  if (q.type === 'tf') {
+    return a === q.correct;
+  }
+
+  if (q.type === 'match') {
+    prepareMatch(q);
+    const keys = Object.keys(a);
+    if (keys.length !== q.pairs.length) return false;
+    for (let i = 0; i < q.pairs.length; i++) {
+      if (a[i] !== q._correct[i]) return false;
+    }
+    return true;
+  }
+
+  return false;
+}
+
+function scoreStage(stage) {
+  const list = stage === 1 ? STAGE1 : STAGE2;
+  const ans = state.answers[stage];
+  let correct = 0;
+  list.forEach((q, i) => {
+    if (checkAnswer(q, ans[i])) correct++;
+  });
+  return correct;
+}
+
+function updateNext() {
+  const list = state.stage === 1 ? STAGE1 : STAGE2;
+  const q = list[state.index];
+  const a = state.answers[state.stage][state.index];
+
+  let ok = false;
+  if (q.type === 'match') {
+    ok = !!a && Object.keys(a).length === q.pairs.length;
+  } else {
+    ok = (a !== undefined && a !== null);
+  }
+
+  document.getElementById('nextBtn').disabled = !ok;
+}
+
+/* =========================================================
+   НАВИГАЦИЯ
+   ========================================================= */
+document.getElementById('nextBtn').addEventListener('click', () => {
+  const list = state.stage === 1 ? STAGE1 : STAGE2;
+
+  if (state.index < list.length - 1) {
+    state.index++;
+    renderQuestion();
+    return;
+  }
+
+  if (state.stage === 1) {
+    state.correct1 = scoreStage(1);
+    showScreen('screen-transition');
+  } else {
+    state.correct2 = scoreStage(2);
+    showResult();
+  }
+});
+
+document.getElementById('toStage2Btn').addEventListener('click', () => {
+  state.stage = 2;
+  state.index = 0;
+  showScreen('screen-quiz');
+  renderQuestion();
+});
+
+/* =========================================================
+   ИТОГОВЫЙ ЭКРАН
+   ========================================================= */
+function showResult() {
+  const c1 = state.correct1;
+  const c2 = state.correct2;
+
+  const p1 = Math.round((c1 / STAGE1.length) * 8);   // максимум 8 баллов
+  const p2 = Math.round((c2 / STAGE2.length) * 2);   // максимум 2 балла
+  const total = Math.min(10, p1 + p2);
+
+  let activeRow;
+  if (total === 10)      activeRow = 0;
+  else if (total >= 8)   activeRow = 1;
+  else if (total >= 6)   activeRow = 2;
+  else if (total >= 4)   activeRow = 3;
+  else                   activeRow = 4;
+
+  const rows = [
+    { range: '10 баллов',   text: 'Отлично усвоил тему, классифицирует все виды ПО (программного обеспечения) и приводит примеры работы ИИ (искусственного интеллекта).' },
+    { range: '8–9 баллов',  text: 'Знает классификацию ПО (программного обеспечения) и функции ИИ (искусственного интеллекта), успешно прошёл продвинутый этап.' },
+    { range: '6–7 баллов',  text: 'Базовый уровень усвоен, знает основные понятия ПО (программного обеспечения) и примеры ИИ (искусственного интеллекта).' },
+    { range: '4–5 баллов',  text: 'Допущены ошибки в базовых понятиях, требуется повторение.' },
+    { range: '1–3 балла',   text: 'Тема усвоена слабо.' }
+  ];
+
+  const rowsHtml = rows.map((r, i) =>
+    '<tr class="' + (i === activeRow ? 'active' : '') + '">' +
+      '<td>' + r.range + '</td>' +
+      '<td>' + r.text + '</td>' +
+    '</tr>'
+  ).join('');
+
+  const html =
+    '<div class="card result-card">' +
+
+      '<div class="result-name-box">' +
+        '<div class="rn-label">Ученик</div>' +
+        '<div class="rn-name">' + escapeHtml(state.name) + '</div>' +
+      '</div>' +
+
+      '<div class="score-box">' +
+        '<div class="score-line">ОЦЕНКА: <span class="score-num">' + total + '</span> из 10 баллов</div>' +
+      '</div>' +
+
+      '<div class="warning-box">⚠️ Не закрывай результат, пока учитель не проверит!</div>' +
+
+      '<div class="breakdown">' +
+        '<div class="bd-item">' +
+          '<span>Этап 1 · «Базовый»</span>' +
+          '<b>' + c1 + ' из ' + STAGE1.length + ' верно → ' + p1 + ' из 8 баллов</b>' +
+        '</div>' +
+        '<div class="bd-item">' +
+          '<span>Этап 2 · «Продвинутый»</span>' +
+          '<b>' + c2 + ' из ' + STAGE2.length + ' верно → ' + p2 + ' из 2 баллов</b>' +
+        '</div>' +
+      '</div>' +
+
+      '<h3 class="section-title">Таблица критериев оценивания</h3>' +
+      '<table class="desc-table">' +
+        '<thead><tr><th>Баллы</th><th>Что показывает результат</th></tr></thead>' +
+        '<tbody>' + rowsHtml + '</tbody>' +
+      '</table>' +
+
+      '<div class="restart-row">' +
+        '<button id="restartBtn" class="btn btn-primary">Пройти заново</button>' +
+      '</div>' +
+
+    '</div>';
+
+  const screen = document.getElementById('screen-result');
+  screen.innerHTML = html;
+  showScreen('screen-result');
+
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    location.reload();
+  });
+}
+</script>
+</body>
+</html>
